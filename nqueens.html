@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N-Queens Problem</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -321,7 +322,6 @@
         }
 
 
-
         function checkSolution() {
             // Check for attacking queens
             let hasAttacks = false;
@@ -341,12 +341,35 @@
             if (hasAttacks) {
                 message.textContent = '⚠️ Queens are attacking each other! Remove or reposition them.';
                 message.classList.add('attack-message');
+                isSolved = false;
             } else {
                 message.classList.remove('attack-message');
                 if (queens.length === 8) {
+                    if (!isSolved) {
+                        // Trigger clear confetti burst (similar to Tic Tac Toe)
+                        confetti({
+                            particleCount: 150,
+                            spread: 80,
+                            origin: { y: 0.6 },
+                            ticks: 500,
+                            scalar: 1.3
+                        });
+                        setTimeout(() => {
+                            confetti({
+                                particleCount: 200,
+                                spread: 120,
+                                origin: { y: 0.6 },
+                                ticks: 500,
+                                scalar: 1.3
+                            });
+                        }, 150);
+                        clearInterval(timerInterval);
+                        isSolved = true;
+                    }
                     message.textContent = 'Congratulations! You solved the N-Queens problem!';
                 } else {
                     message.textContent = `Placed ${queens.length}/8 queens. Place 8 queens so that no two attack each other`;
+                    isSolved = false;
                 }
             }
         }
@@ -359,6 +382,8 @@
             // Reset timer
             startTime = Date.now();
             document.getElementById('timer').textContent = 'Time: 0:00';
+            // Reset solved state
+            isSolved = false;
         }
 
         function startTimer() {

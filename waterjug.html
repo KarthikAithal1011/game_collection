@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Water Jug Problem</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary-color: #007bff;
@@ -34,7 +35,8 @@
             align-items: center;
             padding: 2rem;
             color: var(--text-color);
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             position: relative;
         }
 
@@ -320,6 +322,23 @@
             if (jug3 === target || jug5 === target) {
                 document.getElementById('message').textContent = 'Congratulations! You measured 4L!';
                 stopTimer();
+                // Confetti effect
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    ticks: 500,
+                    scalar: 1.3
+                });
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 200,
+                        spread: 120,
+                        origin: { y: 0.6 },
+                        ticks: 500,
+                        scalar: 1.3
+                    });
+                }, 150);
             } else {
                 document.getElementById('message').textContent = 'Fill the 5L jug to measure 4L using the 3L jug';
             }
