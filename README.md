@@ -15,9 +15,4 @@ Timers for each game
 High-quality icons and refined typography
 No dependencies—just open `index.html` in your browser
 
-Usage
-1. Clone or download this repository.
-2. Open `index.html` in your browser.
-3. Click any game to play instantly.
-
 
