@@ -116,6 +116,13 @@
             font-size: 1.5rem;
             font-weight: 600;
             color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .best-score {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--secondary-color);
             margin-bottom: 1rem;
         }
 
@@ -204,6 +211,7 @@
         <a href="index.html" class="back-button">← Home</a>
         <h1>🦕 Chrome Dinosaur</h1>
         <div class="score" id="score">Score: 0</div>
+        <div class="best-score" id="bestScore">Best Score: 0</div>
         <div class="instructions">
             Press SPACE or ↑ to jump over cacti!<br>
             Avoid hitting the obstacles to keep playing.
@@ -221,8 +229,13 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const scoreElement = document.getElementById('score');
+        const bestScoreElement = document.getElementById('bestScore');
         const gameOverElement = document.getElementById('gameOver');
         const finalScoreElement = document.getElementById('finalScore');
+
+        // Load best score from localStorage
+        let bestScore = localStorage.getItem('dinoBestScore') || 0;
+        bestScoreElement.textContent = `Best Score: ${bestScore}`;
 
         // Game variables
         let dino = {
@@ -389,6 +402,14 @@
         function gameOver() {
             gameRunning = false;
             finalScoreElement.textContent = score;
+
+            // Update best score if current score is higher
+            if (score > bestScore) {
+                bestScore = score;
+                bestScoreElement.textContent = `Best Score: ${bestScore}`;
+                localStorage.setItem('dinoBestScore', bestScore);
+            }
+
             gameOverElement.style.display = 'block';
         }
 

@@ -119,6 +119,16 @@
             justify-content: center;
         }
 
+        .attack-message {
+            color: #dc2626 !important;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
         .board {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
@@ -330,10 +340,14 @@
 
             if (hasAttacks) {
                 message.textContent = '⚠️ Queens are attacking each other! Remove or reposition them.';
-            } else if (queens.length === 8) {
-                message.textContent = 'Congratulations! You solved the N-Queens problem!';
+                message.classList.add('attack-message');
             } else {
-                message.textContent = `Placed ${queens.length}/8 queens. Place 8 queens so that no two attack each other`;
+                message.classList.remove('attack-message');
+                if (queens.length === 8) {
+                    message.textContent = 'Congratulations! You solved the N-Queens problem!';
+                } else {
+                    message.textContent = `Placed ${queens.length}/8 queens. Place 8 queens so that no two attack each other`;
+                }
             }
         }
 
