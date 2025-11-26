@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Dinosaur Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #535353;
+            --secondary-color: #8B8B8B;
+            --background-start: #f7f7f7;
+            --background-end: #e8e8e8;
+            --text-color: #535353;
+            --card-background: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --hover-shadow-color: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(83, 83, 83, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 20px; height: 20px; top: 10%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 15px; height: 15px; top: 20%; left: 80%; animation-delay: 1s; }
+        .particle:nth-child(3) { width: 25px; height: 25px; top: 70%; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(4) { width: 18px; height: 18px; top: 50%; left: 70%; animation-delay: 3s; }
+        .particle:nth-child(5) { width: 22px; height: 22px; top: 30%; left: 40%; animation-delay: 4s; }
+        .particle:nth-child(6) { width: 16px; height: 16px; top: 80%; left: 60%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.5; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+
+        .container {
+            background: var(--card-background);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 1rem 3rem var(--shadow-color);
+            border: 1px solid var(--card-border);
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.05em;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .instructions {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        canvas {
+            border: 2px solid var(--primary-color);
+            border-radius: 1rem;
+            background: #f7f7f7;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 0.5rem 1rem var(--shadow-color);
+            width: 100%;
+            height: auto;
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 1rem 3rem var(--shadow-color);
+            text-align: center;
+            display: none;
+        }
+
+        .game-over h2 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .restart-button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.5rem 1rem var(--shadow-color);
+        }
+
+        .restart-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 1rem 2rem var(--hover-shadow-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            canvas {
+                width: 100%;
+                max-width: 400px;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <a href="index.html" class="back-button">← Home</a>
+        <h1>🦕 Chrome Dinosaur</h1>
+        <div class="score" id="score">Score: 0</div>
+        <div class="instructions">
+            Press SPACE or ↑ to jump over cacti!<br>
+            Avoid hitting the obstacles to keep playing.
+        </div>
+        <canvas id="gameCanvas" width="800" height="200"></canvas>
+
+        <div class="game-over" id="gameOver">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <button class="restart-button" onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const gameOverElement = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+
+        // Game variables
+        let dino = {
+            x: 50,
+            y: 150,
+            width: 40,
+            height: 40,
+            velocityY: 0,
+            gravity: 0.6,
+            jumpPower: -12,
+            isJumping: false
+        };
+
+        let obstacles = [];
+        let score = 0;
+        let gameRunning = true;
+        let gameSpeed = 6;
+        let obstacleSpawnTimer = 0;
+        let spawnThreshold = 120;
+
+        // Chrome Dino sprite (authentic representation)
+        function drawDino() {
+            ctx.fillStyle = '#535353';
+
+            // Body (main rectangle)
+            ctx.fillRect(dino.x + 8, dino.y + 8, 24, 20);
+
+            // Neck
+            ctx.fillRect(dino.x + 28, dino.y + 4, 8, 12);
+
+            // Head
+            ctx.fillRect(dino.x + 24, dino.y, 16, 16);
+
+            // Snout
+            ctx.fillRect(dino.x + 36, dino.y + 4, 8, 8);
+
+            // Eye (white background)
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(dino.x + 32, dino.y + 4, 4, 4);
+
+            // Eye pupil
+            ctx.fillStyle = '#000';
+            ctx.fillRect(dino.x + 33, dino.y + 5, 2, 2);
+
+            // Legs (animated, more detailed)
+            ctx.fillStyle = '#535353';
+            const legOffset = Math.sin(Date.now() * 0.015) * 3;
+
+            // Front leg (upper)
+            ctx.fillRect(dino.x + 12, dino.y + 28, 6, 8 + legOffset);
+            // Front leg (lower)
+            ctx.fillRect(dino.x + 10, dino.y + 32 + legOffset, 4, 6);
+
+            // Back leg (upper)
+            ctx.fillRect(dino.x + 24, dino.y + 28, 6, 8 - legOffset);
+            // Back leg (lower)
+            ctx.fillRect(dino.x + 26, dino.y + 32 - legOffset, 4, 6);
+
+            // Tail
+            ctx.fillRect(dino.x, dino.y + 12, 8, 4);
+            ctx.fillRect(dino.x - 4, dino.y + 14, 6, 2);
+        }
+
+        // Draw cactus obstacle
+        function drawCactus(x, y, width, height) {
+            ctx.fillStyle = '#535353';
+            // Main stem
+            ctx.fillRect(x, y, width, height);
+            // Arms
+            ctx.fillRect(x - 5, y + 5, 10, 8);
+            ctx.fillRect(x + width - 5, y + 15, 10, 8);
+            ctx.fillRect(x + width/2 - 5, y - 5, 10, 8);
+        }
+
+        // Draw ground
+        function drawGround() {
+            ctx.fillStyle = '#535353';
+            ctx.fillRect(0, canvas.height - 10, canvas.width, 10);
+        }
+
+        // Update game logic
+        function update() {
+            if (!gameRunning) return;
+
+            // Update dino physics
+            dino.velocityY += dino.gravity;
+            dino.y += dino.velocityY;
+
+            // Ground collision
+            if (dino.y >= 150) {
+                dino.y = 150;
+                dino.velocityY = 0;
+                dino.isJumping = false;
+            }
+
+            // Update spawn threshold based on score
+            if (score < 100) {
+                spawnThreshold = 120;
+            } else if (score < 200) {
+                spawnThreshold = 70;
+            } else if (score < 500) {
+                spawnThreshold = 55;
+            } else {
+                spawnThreshold = 50;
+            }
+
+            // Spawn obstacles
+            obstacleSpawnTimer++;
+            if (obstacleSpawnTimer > spawnThreshold) {
+                const height = 30 + Math.random() * 20;
+                obstacles.push({
+                    x: canvas.width,
+                    y: canvas.height - 10 - height,
+                    width: 20,
+                    height: height
+                });
+                obstacleSpawnTimer = 0;
+            }
+
+            // Update obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= gameSpeed;
+
+                // Remove off-screen obstacles
+                if (obstacles[i].x + obstacles[i].width < 0) {
+                    obstacles.splice(i, 1);
+                    score += 10;
+                    scoreElement.textContent = `Score: ${score}`;
+                    continue;
+                }
+
+                // Collision detection
+                if (dino.x < obstacles[i].x + obstacles[i].width &&
+                    dino.x + dino.width > obstacles[i].x &&
+                    dino.y < obstacles[i].y + obstacles[i].height &&
+                    dino.y + dino.height > obstacles[i].y) {
+                    gameOver();
+                    return;
+                }
+            }
+
+            // Increase difficulty
+            gameSpeed = 6 + Math.floor(score / 100);
+        }
+
+        // Render game
+        function render() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw ground
+            drawGround();
+
+            // Draw dino
+            drawDino();
+
+            // Draw obstacles
+            obstacles.forEach(obstacle => {
+                drawCactus(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        // Game over
+        function gameOver() {
+            gameRunning = false;
+            finalScoreElement.textContent = score;
+            gameOverElement.style.display = 'block';
+        }
+
+        // Restart game
+        function restartGame() {
+            dino.y = 150;
+            dino.velocityY = 0;
+            dino.isJumping = false;
+            obstacles = [];
+            score = 0;
+            gameRunning = true;
+            gameSpeed = 6;
+            obstacleSpawnTimer = 0;
+            spawnThreshold = 120;
+            scoreElement.textContent = 'Score: 0';
+            gameOverElement.style.display = 'none';
+        }
+
+        // Jump function
+        function jump() {
+            if (!dino.isJumping && gameRunning) {
+                dino.velocityY = dino.jumpPower;
+                dino.isJumping = true;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                jump();
+            }
+        });
+
+        // Touch support for mobile
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            jump();
+        });
+
+        // Game loop
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start game
+        gameLoop();
+    </script>
+</body>
+</html>

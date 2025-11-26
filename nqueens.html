@@ -20,7 +20,6 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overflow: hidden;
             position: relative;
         }
 
@@ -311,22 +310,7 @@
             return false;
         }
 
-        function checkAttacks() {
-            let attackingPairs = [];
-            for (let i = 0; i < queens.length; i++) {
-                for (let j = i + 1; j < queens.length; j++) {
-                    const q1 = queens[i];
-                    const q2 = queens[j];
-                    if (q1.row === q2.row || q1.col === q2.col ||
-                        Math.abs(q1.row - q2.row) === Math.abs(q1.col - q2.col)) {
-                        attackingPairs.push([q1, q2]);
-                    }
-                }
-            }
-            if (attackingPairs.length > 0) {
-                message.textContent = '⚠️ Queens are attacking each other! Remove or reposition them.';
-            }
-        }
+
 
         function checkSolution() {
             // Check for attacking queens
@@ -358,6 +342,9 @@
             boardState = Array(8).fill().map(() => Array(8).fill(false));
             updateBoard();
             message.textContent = 'Place 8 queens so that no two attack each other';
+            // Reset timer
+            startTime = Date.now();
+            document.getElementById('timer').textContent = 'Time: 0:00';
         }
 
         function startTimer() {

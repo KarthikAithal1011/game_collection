@@ -14,7 +14,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
             position: relative;
         }
 
@@ -221,6 +220,11 @@
         function moveTile(index) {
             if (!isAdjacent(index, emptyIndex)) return;
 
+            // Start timer on first move
+            if (!startTime) {
+                startTimer();
+            }
+
             // Swap tile with empty space
             [puzzle[index], puzzle[emptyIndex]] = [puzzle[emptyIndex], puzzle[index]];
             emptyIndex = index;
@@ -265,8 +269,7 @@
         }
 
         resetButton.addEventListener('click', shufflePuzzle);
-        renderBoard();
-        startTimer();
+        shufflePuzzle();
     </script>
 </body>
 </html>
