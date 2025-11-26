@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Jug Problem</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #17a2b8;
+            --background-start: #f8f9fa;
+            --background-end: #e9ecef;
+            --text-color: #343a40;
+            --card-background: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --hover-shadow-color: rgba(0, 0, 0, 0.15);
+            --water-color-start: #00c6ff;
+            --water-color-end: #0072ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(0, 123, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 20px; height: 20px; top: 10%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 15px; height: 15px; top: 20%; left: 80%; animation-delay: 1s; }
+        .particle:nth-child(3) { width: 25px; height: 25px; top: 70%; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(4) { width: 18px; height: 18px; top: 50%; left: 70%; animation-delay: 3s; }
+        .particle:nth-child(5) { width: 22px; height: 22px; top: 30%; left: 40%; animation-delay: 4s; }
+        .particle:nth-child(6) { width: 16px; height: 16px; top: 80%; left: 60%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.5; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+
+        .container {
+            background: var(--card-background);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 1rem 3rem var(--shadow-color);
+            border: 1px solid var(--card-border);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
+            display: inline-block;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 2rem;
+            min-height: 24px;
+        }
+
+        .jugs-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2.5rem;
+        }
+
+        .jug {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .jug-visual {
+            width: 80px;
+            height: 160px;
+            border: 4px solid #adb5bd;
+            border-top: none;
+            border-radius: 0 0 1rem 1rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, var(--water-color-start), var(--water-color-end));
+            transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 0 0 0.75rem 0.75rem;
+        }
+
+        .jug-label {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .jug-amount {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #495057;
+            margin-top: 0.25rem;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        button {
+            padding: 1rem;
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid #dee2e6;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.25rem 0.5rem var(--shadow-color), 0 0 0 0 rgba(0, 123, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2s infinite;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 0.5rem 1rem var(--hover-shadow-color), 0 0 20px rgba(0, 123, 255, 0.7);
+            animation: none;
+        }
+
+        button:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0.25rem 0.5rem var(--shadow-color), 0 0 0 0 rgba(0, 123, 255, 0.7); }
+            50% { box-shadow: 0 0.25rem 0.5rem var(--shadow-color), 0 0 10px rgba(0, 123, 255, 0.4); }
+        }
+
+        #reset-button {
+            grid-column: 1 / -1;
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        #reset-button:hover {
+            background: #c82333;
+            border-color: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">← Home</a>
+    <div class="container">
+        <h1><span style="font-size:1.5em;vertical-align:middle;">💧</span> Water Jug Problem</h1>
+        <div class="timer" id="timer">Time: 0:00</div>
+        <div class="message" id="message">Fill the 5L jug to measure 4L using the 3L jug</div>
+        <div class="jugs-container">
+            <div class="jug">
+                <div class="jug-visual" id="jug3">
+                    <div class="water" id="water3" style="height: 0%;"></div>
+                </div>
+                <div class="jug-label">3L Jug</div>
+                <div class="jug-amount" id="amount3">0L</div>
+            </div>
+            <div class="jug">
+                <div class="jug-visual" id="jug5">
+                    <div class="water" id="water5" style="height: 0%;"></div>
+                </div>
+                <div class="jug-label">5L Jug</div>
+                <div class="jug-amount" id="amount5">0L</div>
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="fill3">Fill 3L</button>
+            <button id="fill5">Fill 5L</button>
+            <button id="empty3">Empty 3L</button>
+            <button id="empty5">Empty 5L</button>
+            <button id="pour3to5">Pour 3L → 5L</button>
+            <button id="pour5to3">Pour 5L → 3L</button>
+            <button id="reset-button">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let jug3 = 0;
+        let jug5 = 0;
+        const jug3Capacity = 3;
+        const jug5Capacity = 5;
+        const target = 4;
+        let startTime = null;
+        let timerInterval = null;
+
+        document.getElementById('fill3').addEventListener('click', () => fillJug(3));
+        document.getElementById('fill5').addEventListener('click', () => fillJug(5));
+        document.getElementById('empty3').addEventListener('click', () => emptyJug(3));
+        document.getElementById('empty5').addEventListener('click', () => emptyJug(5));
+        document.getElementById('pour3to5').addEventListener('click', () => pourJug(3, 5));
+        document.getElementById('pour5to3').addEventListener('click', () => pourJug(5, 3));
+        document.getElementById('reset-button').addEventListener('click', reset);
+
+        function updateDisplay() {
+            document.getElementById('amount3').textContent = jug3 + 'L';
+            document.getElementById('amount5').textContent = jug5 + 'L';
+            document.getElementById('water3').style.height = (jug3 / jug3Capacity) * 100 + '%';
+            document.getElementById('water5').style.height = (jug5 / jug5Capacity) * 100 + '%';
+
+            if (jug3 === target || jug5 === target) {
+                document.getElementById('message').textContent = 'Congratulations! You measured 4L!';
+                stopTimer();
+            } else {
+                document.getElementById('message').textContent = 'Fill the 5L jug to measure 4L using the 3L jug';
+            }
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            startTime = Date.now();
+            document.getElementById('timer').textContent = 'Time: 0:00';
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (!startTime) return;
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const min = Math.floor(elapsed / 60);
+            const sec = elapsed % 60;
+            document.getElementById('timer').textContent = `Time: ${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function fillJug(capacity) {
+            if (capacity === 3) {
+                jug3 = jug3Capacity;
+            } else {
+                jug5 = jug5Capacity;
+            }
+            updateDisplay();
+        }
+
+        function emptyJug(capacity) {
+            if (capacity === 3) {
+                jug3 = 0;
+            } else {
+                jug5 = 0;
+            }
+            updateDisplay();
+        }
+
+        function pourJug(from, to) {
+            let fromAmount, toAmount, toCapacity;
+            if (from === 3) {
+                fromAmount = jug3;
+                toAmount = jug5;
+                toCapacity = jug5Capacity;
+            } else {
+                fromAmount = jug5;
+                toAmount = jug3;
+                toCapacity = jug3Capacity;
+            }
+
+            let space = toCapacity - toAmount;
+            let pourAmount = Math.min(fromAmount, space);
+
+            if (from === 3) {
+                jug3 -= pourAmount;
+                jug5 += pourAmount;
+            } else {
+                jug5 -= pourAmount;
+                jug3 += pourAmount;
+            }
+            updateDisplay();
+        }
+
+        function reset() {
+            jug3 = 0;
+            jug5 = 0;
+            updateDisplay();
+            startTimer();
+        }
+
+        updateDisplay();
+        startTimer();
+    </script>
+</body>
+</html>

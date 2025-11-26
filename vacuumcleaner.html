@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vacuum Cleaner Problem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --background-start: #f8f9fa;
+            --background-end: #e9ecef;
+            --text-color: #343a40;
+            --card-background: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --hover-shadow-color: rgba(0, 0, 0, 0.15);
+            --grid-background: rgba(0, 0, 0, 0.03);
+            --dirt-color: #8d6e63;
+            --vacuum-color: #1a237e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text-color);
+        }
+
+        .container {
+            background: var(--card-background);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 1rem 3rem var(--shadow-color);
+            border: 1px solid var(--card-border);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #495057;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 1.5rem;
+            min-height: 24px;
+        }
+
+        #all-time-best-message {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 1rem;
+            padding: 0.75rem;
+            background: var(--grid-background);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background-color: #fff;
+            border-radius: 0.75rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .dirt {
+            background-color: var(--dirt-color);
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .vacuum {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            animation: pulse 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+            font-size: 1.8rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 117, 252, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(37, 117, 252, 0);
+            }
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .control-button {
+            width: 55px;
+            height: 55px;
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.5rem 1rem var(--shadow-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            box-shadow: 0 0.8rem 1.5rem var(--hover-shadow-color);
+        }
+
+        .reset-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.5rem 1rem var(--shadow-color);
+        }
+
+        .reset-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.8rem 1.5rem var(--hover-shadow-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .grid {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-button">← Back to Games</a>
+        <h1>Vacuum Cleaner Problem</h1>
+        <div class="timer" id="timer">Time: 0:00</div>
+        <div class="timer" id="best-time" style="display: none;"></div>
+        <div class="message" id="all-time-best-message"></div>
+        <div class="message" id="message">Use arrow keys or buttons to move the vacuum and clean all dirt</div>
+        <div class="grid" id="grid"></div>
+        <div class="controls">
+            <div class="control-row">
+                <button class="control-button" id="up">↑</button>
+            </div>
+            <div class="control-row">
+                <button class="control-button" id="left">←</button>
+                <button class="control-button" id="down">↓</button>
+                <button class="control-button" id="right">→</button>
+            </div>
+        </div>
+        <button class="reset-button" id="reset">Reset Game</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+    <script>
+        const grid = document.getElementById('grid');
+        const message = document.getElementById('message');
+        const resetButton = document.getElementById('reset');
+        const timerElement = document.getElementById('timer');
+        const bestTimeElement = document.getElementById('best-time');
+        const allTimeBestMessageElement = document.getElementById('all-time-best-message');
+
+        let vacuumPos = { x: 0, y: 0 };
+        let dirtPositions = [];
+        let startTime;
+        let timerInterval;
+        let gameActive = true;
+
+        function createGrid() {
+            grid.innerHTML = '';
+            for (let y = 0; y < 5; y++) {
+                for (let x = 0; x < 5; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+
+                    if (x === vacuumPos.x && y === vacuumPos.y) {
+                        cell.classList.add('vacuum');
+                        cell.textContent = '🧹';
+                    } else if (dirtPositions.some(pos => pos.x === x && pos.y === y)) {
+                        cell.classList.add('dirt');
+                        cell.textContent = '🗑️';
+                    }
+
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function generateDirt() {
+            dirtPositions = [];
+            for (let i = 0; i < 8; i++) {
+                let x, y;
+                do {
+                    x = Math.floor(Math.random() * 5);
+                    y = Math.floor(Math.random() * 5);
+                } while ((x === 0 && y === 0) || dirtPositions.some(pos => pos.x === x && pos.y === y));
+                dirtPositions.push({ x, y });
+            }
+        }
+
+        function moveVacuum(dx, dy) {
+            if (!gameActive) return;
+            const newX = vacuumPos.x + dx;
+            const newY = vacuumPos.y + dy;
+
+            if (newX >= 0 && newX < 5 && newY >= 0 && newY < 5) {
+                vacuumPos.x = newX;
+                vacuumPos.y = newY;
+
+                // Remove dirt if vacuum moves over it
+                dirtPositions = dirtPositions.filter(pos => !(pos.x === newX && pos.y === newY));
+
+                createGrid();
+                checkWin();
+            }
+        }
+
+        function checkWin() {
+            if (dirtPositions.length === 0) {
+                gameActive = false;
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                clearInterval(timerInterval);
+                message.textContent = `Congratulations! You cleaned all the dirt in ${elapsed} seconds!`;
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    ticks: 500,
+                    scalar: 1.3
+                });
+                 setTimeout(() => {
+                    confetti({
+                        particleCount: 200,
+                        spread: 120,
+                        origin: { y: 0.6 },
+                        ticks: 500,
+                        scalar: 1.3
+                    });
+                }, 150);
+
+                const bestTime = localStorage.getItem('vacuumBestTime');
+                if (bestTime === null || elapsed < bestTime) {
+                    localStorage.setItem('vacuumBestTime', elapsed);
+                    allTimeBestMessageElement.textContent = 'You created new all time best!';
+                    bestTimeElement.textContent = `Best Time: ${elapsed}s`;
+                }
+            } else {
+                message.textContent = `Use arrow keys or buttons to move the vacuum and clean all dirt (${dirtPositions.length} left)`;
+            }
+        }
+        
+        function setupGame() {
+            const bestTime = localStorage.getItem('vacuumBestTime');
+            if (bestTime) {
+                bestTimeElement.style.display = 'inline-block';
+                bestTimeElement.textContent = `Best Time: ${bestTime}s`;
+                allTimeBestMessageElement.textContent = 'All the best!';
+            }
+            resetGame();
+        }
+
+        function resetGame() {
+            gameActive = true;
+            vacuumPos = { x: 0, y: 0 };
+            generateDirt();
+            createGrid();
+            allTimeBestMessageElement.textContent = '';
+            message.textContent = 'Use arrow keys or buttons to move the vacuum and clean all dirt (8 left)';
+            startTime = Date.now();
+            timerElement.textContent = 'Time: 0:00';
+            clearInterval(timerInterval);
+            startTimer();
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                timerElement.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    moveVacuum(0, -1);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    moveVacuum(0, 1);
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    moveVacuum(-1, 0);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    moveVacuum(1, 0);
+                    break;
+            }
+        });
+
+        document.getElementById('up').addEventListener('click', () => moveVacuum(0, -1));
+        document.getElementById('down').addEventListener('click', () => moveVacuum(0, 1));
+        document.getElementById('left').addEventListener('click', () => moveVacuum(-1, 0));
+        document.getElementById('right').addEventListener('click', () => moveVacuum(1, 0));
+        resetButton.addEventListener('click', resetGame);
+
+        setupGame();
+    </script>
+</body>
+</html>
