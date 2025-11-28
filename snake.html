@@ -29,6 +29,8 @@
             background: linear-gradient(135deg, #232526 0%, #414345 100%);
             border-radius: 18px;
             box-shadow: 0 8px 32px rgba(60, 80, 120, 0.18), 0 1.5px 6px rgba(60,80,120,0.12);
+            width: 400px;
+            height: 400px;
         }
         #score {
             font-size: 28px;
@@ -108,6 +110,7 @@
         <div id="highScore">High Score: 0</div>
         <canvas id="gameCanvas" width="600" height="600"></canvas>
         <div id="gameOver" style="display: none;"></div>
+        <button onclick="window.location.href='index.html'">Back</button>
         <button onclick="restartGame()">Restart</button>
     </div>
 

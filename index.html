@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Games Collection</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #6a11cb;
-            --secondary-color: #2575fc;
+            --primary-color: #11cbab;
+            --secondary-color: #25fca7;
             --background-start: #f8f9fa;
             --background-end: #e9ecef;
             --text-color: #343a40;
@@ -26,7 +27,6 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -35,6 +35,12 @@
             color: var(--text-color);
             overflow: hidden;
             position: relative;
+            background: linear-gradient(120deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            animation: bgMove 12s ease-in-out infinite alternate;
+        }
+        @keyframes bgMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
         /* Floating Particles */
@@ -50,7 +56,7 @@
 
         .particle {
             position: absolute;
-            background: rgba(106, 17, 203, 0.1);
+            background: rgba(17, 203, 171, 0.1);
             border-radius: 50%;
             animation: float 6s ease-in-out infinite;
         }
@@ -81,7 +87,8 @@
         .floating-icon {
             position: absolute;
             font-size: 2rem;
-            opacity: 0.3;
+            opacity: 0.6;
+            filter: brightness(1.2) saturate(1.5);
             animation: drift 8s ease-in-out infinite;
         }
 
@@ -98,57 +105,69 @@
         }
 
         .container {
-            background: var(--card-background);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 2rem;
-            padding: 4rem;
-            box-shadow: 0 1rem 3rem var(--shadow-color);
-            border: 1px solid var(--card-border);
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(32px) saturate(180%);
+            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            border-radius: 2.5rem;
+            padding: 4rem 3rem 3rem 3rem;
+            box-shadow: 0 2rem 4rem 0 rgba(17, 203, 171, 0.18), 0 1.5px 6px rgba(60,80,120,0.12);
+            border: 1.5px solid rgba(255,255,255,0.25);
             text-align: center;
-            max-width: 700px;
+            max-width: 760px;
             width: 100%;
             transition: all 0.3s ease;
+            position: relative;
+            animation: fadeInUp 1.2s cubic-bezier(.39,.575,.565,1) both;
         }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
 
         h1 {
             font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-            margin-bottom: 3rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 3.2rem;
             letter-spacing: -0.05em;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6), 0 0 30px rgba(0,0,0,0.4), 0 0 10px rgba(17, 203, 171, 0.5), 0 0 20px rgba(37, 252, 167, 0.3), 0 0 30px rgba(17, 203, 171, 0.2), 0 8px 32px rgba(60,80,120,0.18), 0 1.5px 6px rgba(60,80,120,0.12);
         }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
 
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+            gap: 2.2rem;
+            margin-bottom: 3.2rem;
+            animation: fadeInUp 1.6s cubic-bezier(.39,.575,.565,1) both;
         }
 
         .game-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            text-decoration: none;
+            gap: 0.8rem;
+            padding: 1.2rem 1rem;
+            background: rgba(255,255,255,0.18);
+            border: 1.5px solid rgba(255,255,255,0.22);
             border-radius: 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 0.5rem 1rem var(--shadow-color), 0 0 0 0 rgba(106, 17, 203, 0.7);
-            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: #232526;
+            box-shadow: 0 1.2rem 2.2rem rgba(17, 203, 171, 0.10), 0 1.5px 6px rgba(60,80,120,0.10);
             position: relative;
             overflow: hidden;
-            animation: pulse 2s infinite;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: fadeInUp 2.2s cubic-bezier(.39,.575,.565,1) both;
+            backdrop-filter: blur(12px) saturate(120%);
         }
+        
 
         .game-button::before {
             content: '';
@@ -165,9 +184,10 @@
         }
 
         .game-button:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 1rem 2rem var(--hover-shadow-color), 0 0 20px rgba(106, 17, 203, 0.7);
-            animation: none;
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 2.2rem 3.2rem var(--hover-shadow-color), 0 0 32px rgba(17, 203, 171, 0.18);
+            background: linear-gradient(120deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: #fff;
         }
 
         .game-button:hover::before {
@@ -176,26 +196,36 @@
 
         .game-button:active {
             transform: translateY(-2px) scale(1);
-            box-shadow: 0 0.5rem 1rem var(--shadow-color), 0 0 10px rgba(106, 17, 203, 0.5);
+            box-shadow: 0 0.5rem 1rem var(--shadow-color), 0 0 10px rgba(17, 203, 171, 0.5);
         }
 
         @keyframes pulse {
-            0%, 100% { box-shadow: 0 0.5rem 1rem var(--shadow-color), 0 0 0 0 rgba(106, 17, 203, 0.7); }
-            50% { box-shadow: 0 0.5rem 1rem var(--shadow-color), 0 0 10px rgba(106, 17, 203, 0.4); }
+            0%, 100% { box-shadow: 0 0.5rem 1rem var(--shadow-color), 0 0 0 0 rgba(17, 203, 171, 0.7); }
+            50% { box-shadow: 0 0.5rem 1rem var(--shadow-color), 0 0 10px rgba(17, 203, 171, 0.4); }
         }
 
         .game-icon {
-            font-size: 1.8rem;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            font-size: 2.2rem;
+            filter: drop-shadow(0 2px 8px rgba(17, 203, 171, 0.18));
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .game-button:hover .game-icon {
+            transform: scale(1.18) rotate(-8deg);
         }
 
         .footer {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            margin-top: 3.2rem;
+            padding-top: 2.2rem;
+            border-top: 2px solid;
+            border-image: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%) 1;
             color: #6c757d;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
         }
 
         @media (max-width: 768px) {
@@ -219,6 +249,24 @@
     </style>
 </head>
 <body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="floating-icons">
+        <span class="floating-icon" style="top:12%;left:8%;font-size:2.6rem;">🎮</span>
+        <span class="floating-icon" style="top:22%;right:10%;font-size:2.2rem;">🧩</span>
+        <span class="floating-icon" style="bottom:18%;left:12%;font-size:2.4rem;">♛</span>
+        <span class="floating-icon" style="bottom:28%;right:16%;font-size:2.2rem;">⭕</span>
+        <span class="floating-icon" style="top:50%;left:50%;font-size:2.8rem;">🐍</span>
+        <span class="floating-icon" style="top:35%;left:5%;font-size:2.4rem;">🏆</span>
+        <span class="floating-icon" style="top:60%;right:5%;font-size:2.3rem;">🎯</span>
+        <span class="floating-icon" style="bottom:40%;left:50%;font-size:2.5rem;">🎲</span>
+    </div>
     <div class="container">
         <h1>Games Collection</h1>
         <div class="games-grid">
@@ -250,9 +298,14 @@
                 <span class="game-icon">🐍</span>
                 Snake
             </a>
+            <a href="towerofhanoi.html" class="game-button">
+                <span class="game-icon">🏗️</span>
+                Tower of Hanoi
+            </a>
         </div>
         <div class="footer">
-            <p>Challenge your mind with these classic puzzles and games</p>
+            <i class="fas fa-star" style="color:#ffd700;font-size:1.2rem;"></i>
+            <span>Challenge your mind with these classic puzzles and games</span>
         </div>
     </div>
 </body>
