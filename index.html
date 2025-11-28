@@ -33,7 +33,6 @@
             align-items: center;
             padding: 2rem;
             color: var(--text-color);
-            overflow: hidden;
             position: relative;
             background: linear-gradient(120deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             animation: bgMove 12s ease-in-out infinite alternate;
@@ -96,6 +95,8 @@
         .floating-icon:nth-child(2) { top: 25%; right: 15%; animation-delay: 2s; content: '🧩'; }
         .floating-icon:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 4s; content: '♛'; }
         .floating-icon:nth-child(4) { bottom: 30%; right: 20%; animation-delay: 6s; content: '⭕'; }
+        .floating-icon:nth-child(5) { top: 10%; right: 5%; animation-delay: 8s; content: '♔'; }
+        .floating-icon:nth-child(6) { bottom: 10%; left: 20%; animation-delay: 10s; content: '♟'; }
 
         @keyframes drift {
             0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
@@ -301,6 +302,10 @@
             <a href="towerofhanoi.html" class="game-button">
                 <span class="game-icon">🏗️</span>
                 Tower of Hanoi
+            </a>
+            <a href="chess.html" class="game-button">
+                <span class="game-icon">♔</span>
+                Chess
             </a>
         </div>
         <div class="footer">
